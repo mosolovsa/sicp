@@ -1,0 +1,1 @@
+; if 'if' wouldn't be a special form, all arguments of 'new-if' would be evaluated before calling the function, so such example ended up by 'stack overflow' because of infinite recursion?
