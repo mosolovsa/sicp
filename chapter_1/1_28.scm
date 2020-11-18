@@ -10,76 +10,61 @@
     (/ n (expt 2 s))
 )
 
-; #t - composite, #f - prime
-(define (miler-rabin n)
-    (define s (get-s n))
-    (define d (get-d n s))
-    (define (test a)
-        (define (test-s iters)
-            (define y (remainder (expt a (expt 2 iters)) n))
-            (if (< iters s)
-                (cond ((= y 1) #t)
-                      ((= y (- n 1)) (test-s (+ iters 1)))
-                      (else #t)
-                )
-                #f)
-        )
-        (define x (remainder (expt a d) n))
-        (if (or (= x 1) (= x (- n 1)))
-            #f
-            (test-s 0)
-        )
-    )
-    (define (iter a)
-        (if (< a n)
-            (if (test a)
+(define (full-test-prime number)
+    (define s (get-s (- number 1)))
+    (define d (get-d (- number 1) s))
+
+    ; #t - prime #f - composite
+    (define (miler-rabin a s d n)
+;        (display "miler-rabin a: ")
+;        (display a)
+;        (display " s: ")
+;        (display s)
+;        (display " d: ")
+;        (display d)
+;        (display " ")
+;        (display n)
+;        (newline)
+        (define (test-r r)
+            (define y (expt a (* (expt 2 r) d)))
+;            (display "test-r ")
+;            (display y)
+;            (display " ")
+;            (display r)
+;            (newline)
+            (if (= (remainder y n) (- n 1))
                 #t
-                (iter (+ a 1)))
-            #f)
+                (if (< r s) (test-r (+ r 1)) #f)
+            )
+        )
+        (if (= (remainder (expt a d) n) 1)
+            #t
+            (test-r 0))
     )
-    (iter 1)
+
+    (define (test-all-a i)
+;        (display "test-all-a ")
+;        (display i)
+;        (newline)
+        (if (< i number)
+            (if (miler-rabin i s d number)
+                (test-all-a (+ i 1))
+                #f)
+            #t)
+    )
+
+    (test-all-a 1)
 )
 
-(miler-rabin 3)
-
 ; 561, 1105, 1729, 2465, 2821 and 6601
-(miler-rabin 3)
-(miler-rabin 4)
-(miler-rabin 561)
-(miler-rabin 1105)
-(miler-rabin 1729)
-(miler-rabin 2465)
-(miler-rabin 2821)
-(miler-rabin 6601)
-
-;1 ]=> (miler-rabin 3)
-;Value: #f
-
-;1 ]=> ; 561, 1105, 1729, 2465, 2821 and 6601
-;(miler-rabin 3)
-;Value: #f
-
-;1 ]=> (miler-rabin 4)
-;Value: #t
-
-;1 ]=> (miler-rabin 561)
-;Value: #f
-
-;1 ]=> (miler-rabin 1105)
-;Value: #f
-
-;1 ]=> (miler-rabin 1729)
-;Value: #f
-
-;1 ]=> (miler-rabin 2465)
-;Value: #f
-
-;1 ]=> (miler-rabin 2821)
-;Value: #f
-
-;1 ]=> (miler-rabin 6601)
-;Value: #f
-
-;1 ]=> 
-;End of input stream reached.
-;Moriturus te saluto.
+(full-test-prime 3)
+(full-test-prime 4)
+(full-test-prime 61)
+(full-test-prime 63)
+(full-test-prime 67)
+(full-test-prime 561)
+(full-test-prime 1105)
+(full-test-prime 1729)
+(full-test-prime 2465)
+(full-test-prime 2821)
+(full-test-prime 6601)
