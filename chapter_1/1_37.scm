@@ -5,7 +5,15 @@
             (/ (n i) (+ (d i) (recur (+ i 1))))))
     (recur 1))
 
+(define (cont-frac-iter n d k)
+    (define (impl acc i)
+        (if (= i 1) 
+            (/ (n 1) (+ (d 1) acc))
+            (impl (/ (n i) (+ (d i) acc)) (- i 1))))
+    (impl (/ (n k) (d k)) (- k 1)))
+
 (cont-frac (lambda (i) 1) (lambda (i) 1) 100)
+(cont-frac-iter (lambda (i) 1) (lambda (i) 1) 100)
 
 (define (golden-ratio k)
     (cont-frac (lambda (i) 1) (lambda (i) 1) k))
