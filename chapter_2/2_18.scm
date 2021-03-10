@@ -1,16 +1,16 @@
-(define (last-elem l)
-    (if (pair? (cdr l))
-        (last-elem (cdr l))
-        (car l)))
+(define (my-len l)
+    (define (my-iter-len l i)
+        (if (null? l) i (my-iter-len (cdr l) (+ i 1))))
+    (my-iter-len l 0))
 
-(define (drop-last l)
-    (if (and (pair? l) (pair? (cdr l)))
-        (cons (car l) (drop-last (cdr l)))
-        '()))
+(define (my-get-at l i)
+    (if (= i 1) (car l) (my-get-at (cdr l) (- i 1))))
 
-(define (my-reverse l)
-    (if (pair? l)
-        (cons (last-elem l) (my-reverse (drop-last l)))
-        '()))
+(define (my-reverse l) 
+    (define len (my-len l))
+    (define (myr i rv)
+        (if (> i len) rv
+            (myr (+ i 1) (cons (my-get-at l i) rv))))
+    (myr 1 '()))
 
 (my-reverse (list 1 4 9 16 25))
