@@ -31,4 +31,6 @@
 
 (define (matrix-*-matrix m n)
     (let ((cols (transpose n)))
-        (map h??i m)))
+        (map (lambda (rows) (reverse (matrix-*-vector cols rows))) m)))
+
+(matrix-*-matrix mat (list (list 1 0 0) (list 0 1 0) (list 0 0 1)))
